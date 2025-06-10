@@ -1,0 +1,69 @@
+{% block content %}
+<div class="container mt-4">
+  <h2>📊 تقارير متقدمة</h2>
+
+  <!-- تصفية الفترة -->
+  <form method="get" class="row g-3 align-items-end">
+    <div class="col-auto">
+      <label>من:</label>
+      <input type="date" name="start_date" class="form-control" value="{{ start_date }}">
+    </div>
+    <div class="col-auto">
+      <label>إلى:</label>
+      <input type="date" name="end_date" class="form-control" value="{{ end_date }}">
+    </div>
+    <div class="col-auto">
+      <button type="submit" class="btn btn-primary">تطبيق التصفية</button>
+    </div>
+    <div class="col-auto">
+      <a href="{% url 'export_excel' %}" class="btn btn-success">📥 Excel</a>
+      <a href="{% url 'export_pdf' %}" class="btn btn-danger">📄 PDF</a>
+    </div>
+  </form>
+
+  <hr>
+
+  <canvas id="patientChart" width="600" height="300"></canvas>
+  <canvas id="appointmentsChart" width="600" height="300" class="mt-4"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const labels = {{ labels|safe }};
+const data = {{ data|safe }};
+new Chart(document.getElementById('patientChart'), {
+  type: 'bar',
+  data: { labels, datasets: [{ label: "عدد المواعيد لكل مريض", data, backgroundColor: 'rgba(54,162,235,0.5)' }] },
+  options: { responsive: true, scales: { y: { beginAtZero: true } } }
+});
+
+new Chart(document.getElementById('appointmentsChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ["منتهية", "قادمة"],
+    datasets: [{ data: [{{ past_count }}, {{ upcoming_count }}], backgroundColor: ['rgba(255,99,132,0.5)','rgba(75,192,192,0.5)'] }]
+  },
+  options: { responsive: true }
+});
+</script>
+{% endblock %}
+📄 3. templates/core/reports_pdf.html
+html
+Copy
+Edit
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8"><style>*{font-family: DejaVu Sans, sans-serif;}</style>
+</head>
+<body>
+  <h2>تقرير المواعيد</h2>
+  <table border="1" cellspacing="0" cellpadding="4">
+    <tr><th>المريض</th><th>عدد المواعيد</th></tr>
+    {% for p in patients %}<tr><td>{{ p.name }}</td><td>{{ p.cnt }}</td></tr>{% endfor %}
+  </table>
+  <br>
+  <p>مواعيد منتهية: {{ past }}</p>
+  <p>مواعيد قادمة: {{ upcoming }}</p>
+</body>
+</html>

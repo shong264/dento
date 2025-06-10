@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>قائمة المرضى</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .header-section {
+      background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+      color: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+    }
+    .patient-table {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+    .patient-table thead {
+      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    }
+    .patient-table th {
+      font-weight: 600;
+      padding: 15px;
+    }
+    .patient-table tbody tr {
+      transition: all 0.2s ease;
+    }
+    .patient-table tbody tr:hover {
+      background-color: rgba(52, 152, 219, 0.05);
+      transform: translateX(5px);
+    }
+    .action-btn {
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 14px;
+      transition: all 0.2s;
+      margin: 0 3px;
+    }
+    .action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    .btn-add-patient {
+      background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+      border: none;
+      padding: 8px 16px;
+      box-shadow: 0 2px 6px rgba(46, 204, 113, 0.3);
+      transition: all 0.2s;
+    }
+    .btn-add-patient:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(46, 204, 113, 0.4);
+    }
+    .empty-row {
+      color: #7f8c8d;
+      font-style: italic;
+    }
+    .alert {
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body dir="rtl">
+  <div class="container py-4">
+    <!-- رسائل النظام -->
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          <i class="bi {% if message.tags == 'success' %}bi-check-circle-fill{% else %}bi-exclamation-triangle-fill{% endif %} me-2"></i>
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="إغلاق"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <!-- رأس الصفحة -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div class="header-section">
+        <h2 class="mb-0"><i class="bi bi-people-fill me-2"></i>قائمة المرضى</h2>
+      </div>
+      <div>
+        <a href="{% url 'add_patient' %}" class="btn btn-add-patient text-white me-2">
+          <i class="bi bi-plus-circle me-1"></i> إضافة مريض
+        </a>
+        <a href="{% url 'dashboard' %}" class="btn btn-outline-primary">
+          <i class="bi bi-house-door me-1"></i> الرئيسية
+        </a>
+      </div>
+    </div>
+
+    <!-- جدول المرضى -->
+    <div class="card patient-table">
+      <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+          <thead class="text-white">
+            <tr>
+              <th class="text-center">#</th>
+              <th>الاسم</th>
+              <th>الهاتف</th>
+              <th class="text-center">الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for patient in patients %}
+              <tr>
+                <td class="text-center">{{ forloop.counter }}</td>
+                <td>{{ patient.name }}</td>
+                <td>{{ patient.phone }}</td>
+                <td class="text-center">
+                  {% if user.is_superuser or perms.core.change_patient %}
+                  <a href="{% url 'edit_patient' patient.pk %}" class="btn btn-primary action-btn">
+                    <i class="bi bi-pencil-square me-1"></i> تعديل
+                  </a>
+                  {% endif %}
+                  {% if user.is_superuser or perms.core.delete_patient %}
+                  <a href="{% url 'delete_patient' patient.pk %}" class="btn btn-danger action-btn" onclick="return confirm('هل أنت متأكد من حذف هذا المريض؟')">
+                    <i class="bi bi-trash me-1"></i> حذف
+                  </a>
+                  {% endif %}
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="4" class="text-center py-4 empty-row">
+                  <i class="bi bi-people display-6 text-muted mb-2"></i><br>
+                  لا يوجد مرضى حتى الآن
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // تأثيرات حركية للصفوف
+    document.addEventListener('DOMContentLoaded', function() {
+      const rows = document.querySelectorAll('tbody tr');
+      rows.forEach((row, index) => {
+        setTimeout(() => {
+          row.style.opacity = '1';
+          row.style.transform = 'translateX(0)';
+        }, index * 50);
+      });
+    });
+  </script>
+</body>
+</html>
