@@ -38,4 +38,15 @@ class Appointment(models.Model):
     
 
 
+# models.py (إضافة هذا النموذج)
+class MedicalRecord(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, verbose_name="المريض")
+    visit_date = models.DateField(auto_now_add=True, verbose_name="تاريخ الزيارة")
+    diagnosis = models.TextField(verbose_name="التشخيص")
+    treatment = models.TextField(verbose_name="العلاج")
+    prescription = models.TextField(blank=True, verbose_name="الوصفة الطبية")
+    cost = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="التكلفة")
     
+    class Meta:
+        verbose_name = "ملف طبي"
+        verbose_name_plural = "الملفات الطبية"

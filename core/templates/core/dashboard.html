@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>لوحة التحكم - عيادة الأسنان</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <!-- استخدم نسخة RTL من Bootstrap -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
   <style>
     :root {
@@ -88,19 +90,6 @@
       opacity: 0.7;
       animation: pulse 2s infinite;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.03); }
-    }
-    .animate-card {
-      animation: fadeIn 0.7s ease-out forwards;
-    }
-    .delay-1 { animation-delay: 0.2s; }
-    .delay-2 { animation-delay: 0.4s; }
     .navbar-custom {
       background: linear-gradient(90deg, #3498db 0%, #2c3e50 100%);
       padding: 14px 24px;
@@ -110,7 +99,7 @@
     .navbar-custom a {
       color: #ffffff !important;
       font-weight: 600;
-      margin-left: 15px;
+      margin-left: 0.5rem;
       transition: all 0.3s ease;
     }
     .navbar-custom a:hover {
@@ -122,31 +111,41 @@
       font-weight: bold;
       color: #fff !important;
     }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
   </style>
 </head>
-<body dir="rtl">
+<body>
 
-  <!-- شريط التنقل -->
+  <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-custom mb-4">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">
         <i class="bi bi-speedometer2 me-2"></i>لوحة التحكم
       </a>
-      <div class="collapse navbar-collapse justify-content-end">
+      <!-- زر القائمة للجوال -->
+      <button class="navbar-toggler btn-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="قائمة التنقل">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <!-- روابط القائمة -->
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
         <ul class="navbar-nav mb-2 mb-lg-0 align-items-center">
           <li class="nav-item">
             <a href="{% url 'appointment_list' %}" class="nav-link">
-              <i class="bi bi-calendar-event me-1"></i>عرض جميع المواعيد
+              <i class="bi bi-calendar-event ms-1"></i>عرض جميع المواعيد
             </a>
           </li>
           <li class="nav-item">
             <a href="{% url 'patient_list' %}" class="nav-link">
-              <i class="bi bi-people-fill me-1"></i>عرض جميع المرضى
+              <i class="bi bi-people-fill ms-1"></i>عرض جميع المرضى
             </a>
           </li>
           <li class="nav-item">
             <a href="{% url 'logout' %}" class="nav-link">
-              <i class="bi bi-box-arrow-left me-1"></i>تسجيل الخروج
+              <i class="bi bi-box-arrow-left ms-1"></i>تسجيل الخروج
             </a>
           </li>
         </ul>
@@ -154,8 +153,9 @@
     </div>
   </nav>
 
+  <!-- المحتوى الرئيسي -->
   <div class="container py-4">
-    <div class="header-section d-flex justify-content-between align-items-center animate-card">
+    <div class="header-section d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
       <div>
         <h1 class="text-primary mb-2">
           <i class="bi bi-speedometer2 me-2"></i>لوحة التحكم
@@ -166,17 +166,17 @@
 
     <div class="row g-4">
       <!-- عدد المرضى -->
-      <div class="col-md-6">
-        <div class="dashboard-card card h-100 animate-card delay-1">
+      <div class="col-12 col-md-6">
+        <div class="dashboard-card card h-100">
           <div class="card-body p-4">
-            <div class="d-flex justify-content-between align-items-center">
-              <div>
+            <div class="d-flex justify-content-between align-items-center flex-column flex-sm-row">
+              <div class="text-center text-sm-start">
                 <h5 class="card-title mb-3">
                   <i class="bi bi-people-fill text-primary me-2"></i>عدد المرضى
                 </h5>
                 <p class="patient-count mb-0">{{ patients_count }}</p>
               </div>
-              <div class="icon-wrapper">
+              <div class="icon-wrapper mt-3 mt-sm-0">
                 <i class="bi bi-people-fill text-primary" style="font-size: 2rem;"></i>
               </div>
             </div>
@@ -190,8 +190,8 @@
       </div>
 
       <!-- مواعيد اليوم -->
-      <div class="col-md-6">
-        <div class="dashboard-card card h-100 animate-card delay-2">
+      <div class="col-12 col-md-6">
+        <div class="dashboard-card card h-100">
           <div class="card-body p-4">
             <h5 class="card-title mb-3">
               <i class="bi bi-calendar-check text-primary me-2"></i>مواعيد اليوم
@@ -262,6 +262,7 @@
     </div>
   </div>
 
+  <!-- JavaScript من Bootstrap (يشمل collapse) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
