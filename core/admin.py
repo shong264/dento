@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Patient , Appointment
+from .models import Patient , Appointment , MedicalRecord
+
 
 # Register your models here.
 
@@ -15,3 +16,8 @@ class AppointmentAdmin(admin.ModelAdmin):
     list_display = ('patient' , 'date' , 'time' , 'notes')
     list_filter = ('date' )
 admin.site.register(Appointment)
+
+class MedicalRecordAdmin(admin.ModelAdmin):
+    list_display = ('patient' , 'visit_date' , 'diagnosis' , 'treatment' , 'prescription' , 'cost')
+    list_filter = ('patient' , 'visit_date')
+    admin.site.register(MedicalRecord)
