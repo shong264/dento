@@ -1,0 +1,392 @@
+{% load custom_filters %}
+{% block content %}
+
+<!-- استايلات متقدمة -->
+<style>
+  :root {
+    --primary-color: #3498db;
+    --secondary-color: #2980b9;
+    --danger-color: #e74c3c;
+    --warning-color: #f39c12;
+    --success-color: #2ecc71;
+    --light-color: #ecf0f1;
+    --dark-color: #2c3e50;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+  }
+
+  .dental-container {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+  }
+
+  .tooth-btn {
+    width: 55px;
+    height: 55px;
+    margin: 5px;
+    border-radius: 50%;
+    border: 3px solid var(--primary-color);
+    font-weight: bold;
+    font-size: 16px;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .tooth-btn::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: rotate(45deg);
+    transition: var(--transition);
+  }
+
+  .tooth-btn:hover::before {
+    left: 100%;
+  }
+
+  .tooth-normal {
+    background: linear-gradient(145deg, #ffffff, #e6e6e6);
+    color: var(--primary-color);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .tooth-normal:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
+  }
+
+  .tooth-issue {
+    background: linear-gradient(145deg, #ffdbdb, #ffb8b8);
+    border-color: var(--danger-color);
+    color: var(--danger-color);
+    animation: pulse 2s infinite;
+    box-shadow: 0 2px 5px rgba(231, 76, 60, 0.2);
+  }
+
+  .tooth-issue:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 10px 20px rgba(231, 76, 60, 0.3);
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+
+  .header-title {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 20px 0;
+    color: var(--dark-color);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    padding-bottom: 15px;
+  }
+
+  .header-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    border-radius: 3px;
+  }
+
+  .jaw-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--dark-color);
+    margin: 25px 0 15px;
+    padding: 8px 15px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 30px;
+    display: inline-block;
+    box-shadow: var(--shadow);
+  }
+
+  .tooth-section {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 25px;
+    border-radius: 15px;
+    margin: 20px auto;
+    max-width: 900px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+  }
+
+  .tooth-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  .search-bar {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 30px 0;
+    flex-wrap: wrap;
+  }
+
+  .search-bar input {
+    max-width: 250px;
+    border-radius: 30px;
+    padding: 12px 20px;
+    border: 2px solid #ddd;
+    transition: var(--transition);
+  }
+
+  .search-bar input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+  }
+
+  .search-btn {
+    border-radius: 30px;
+    padding: 10px 25px;
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border: none;
+    color: white;
+    transition: var(--transition);
+  }
+
+  .search-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
+  }
+
+  .home-btn {
+    border-radius: 30px;
+    padding: 10px 20px;
+    font-weight: 600;
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    color: white;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: var(--shadow);
+  }
+
+  .home-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(46, 204, 113, 0.3);
+    color: white;
+  }
+
+  .records-table {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    margin-top: 40px;
+  }
+
+  .table thead {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+  }
+
+  .table th {
+    font-weight: 600;
+    padding: 15px;
+  }
+
+  .table td {
+    vertical-align: middle;
+    padding: 12px 15px;
+  }
+
+  .table tbody tr {
+    transition: var(--transition);
+  }
+
+  .table tbody tr:hover {
+    background-color: rgba(52, 152, 219, 0.1);
+  }
+
+  .action-btn {
+    border-radius: 30px;
+    padding: 6px 15px;
+    font-weight: 500;
+    transition: var(--transition);
+    margin: 3px;
+  }
+
+  .edit-btn {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    color: white;
+    border: none;
+  }
+
+  .edit-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(243, 156, 18, 0.3);
+    color: white;
+  }
+
+  .delete-btn {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+    border: none;
+  }
+
+  .delete-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+    color: white;
+  }
+
+  .no-records {
+    text-align: center;
+    padding: 30px;
+    color: #7f8c8d;
+    font-size: 1.2rem;
+  }
+
+  .section-divider {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+    margin: 40px 0;
+    border: none;
+  }
+
+  /* تأثيرات للهواتف */
+  @media (max-width: 768px) {
+    .tooth-btn {
+      width: 45px;
+      height: 45px;
+      font-size: 14px;
+    }
+    
+    .header-title {
+      font-size: 1.8rem;
+    }
+    
+    .search-bar {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .search-bar input {
+      max-width: 100%;
+    }
+  }
+</style>
+
+<div class="dental-container">
+  <!-- زر الرجوع إلى الرئيسية مع تأثيرات -->
+  <div class="text-start m-3">
+    <a href="{% url 'dashboard' %}" class="home-btn shadow">
+      <i class="bi bi-house-door-fill"></i> الرئيسية
+    </a>
+  </div>
+
+  <!-- العنوان مع تأثير متطور -->
+  <h2 class="header-title">رسم وفحص الأسنان - {{ patient.name }}</h2>
+
+  <!-- نموذج البحث مع تنسيق حديث -->
+  <form method="GET" class="search-bar">
+    <input type="text" name="search_name" placeholder="اسم المريض" class="form-control" value="{{ request.GET.search_name }}">
+    <input type="date" name="search_date" class="form-control" value="{{ request.GET.search_date }}">
+    <button type="submit" class="btn search-btn">
+      <i class="bi bi-search"></i> بحث
+    </button>
+  </form>
+
+  <!-- الفك العلوي مع تصميم مميز -->
+  <div class="tooth-section text-center">
+    <div class="jaw-title">الفك العلوي</div>
+    {% for tooth in upper_teeth %}
+      {% with tooth_record=tooth_records|get_item:tooth %}
+        <form method="POST" action="{% url 'add_or_update_tooth_record' patient.id %}" style="display: inline;">
+          {% csrf_token %}
+          <input type="hidden" name="tooth_number" value="{{ tooth }}">
+          <button class="tooth-btn {% if tooth_record %}tooth-issue{% else %}tooth-normal{% endif %}" title="{{ tooth }}">
+            {{ tooth }}
+          </button>
+        </form>
+      {% endwith %}
+    {% endfor %}
+  </div>
+
+  <!-- الفك السفلي مع تصميم مميز -->
+  <div class="tooth-section text-center">
+    <div class="jaw-title">الفك السفلي</div>
+    {% for tooth in lower_teeth %}
+      {% with tooth_record=tooth_records|get_item:tooth %}
+        <form method="POST" action="{% url 'add_or_update_tooth_record' patient.id %}" style="display: inline;">
+          {% csrf_token %}
+          <input type="hidden" name="tooth_number" value="{{ tooth }}">
+          <button class="tooth-btn {% if tooth_record %}tooth-issue{% else %}tooth-normal{% endif %}" title="{{ tooth }}">
+            {{ tooth }}
+          </button>
+        </form>
+      {% endwith %}
+    {% endfor %}
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- جدول السجلات مع تنسيق متطور -->
+  <h3 class="text-center jaw-title">سجلات الأسنان</h3>
+  <div class="records-table">
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover text-center">
+        <thead>
+          <tr>
+            <th>رقم السن</th>
+            <th>الحالة</th>
+            <th>الخطة العلاجية</th>
+            <th>ملاحظات</th>
+            <th>الإجراءات</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for record in tooth_records.values %}
+          <tr>
+            <td>{{ record.tooth_number }}</td>
+            <td>{{ record.condition }}</td>
+            <td>{{ record.treatment_plan }}</td>
+            <td>{{ record.notes }}</td>
+            <td>
+              <a href="{% url 'edit_tooth_record' record.id %}" class="btn action-btn edit-btn">
+                <i class="bi bi-pencil-square"></i> تعديل
+              </a>
+              <a href="{% url 'delete_tooth_record' record.id %}" class="btn action-btn delete-btn" onclick="return confirm('هل أنت متأكد من حذف هذا السجل؟')">
+                <i class="bi bi-trash"></i> حذف
+              </a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" class="no-records">
+              <i class="bi bi-info-circle" style="font-size: 1.5rem;"></i><br>
+              لا توجد سجلات بعد
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

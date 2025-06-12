@@ -16,4 +16,34 @@ urlpatterns = [
     path('delete_appointment/delete/<int:pk>/', views.delete_appointment, name='delete_appointment'),
 
 
+    path('dashboard/medical-records/', views.medical_records_list, name='medical_records_list'),
+    path('dashboard/add-medical-record/', views.add_medical_record, name='add_medical_record'),
+    path('dashboard/medical-record/edit/<int:pk>/', views.edit_medical_record, name='edit_medical_record'),
+    path('dashboard/medical-record/delete/<int:pk>/', views.delete_medical_record, name='delete_medical_record'),
+
+
+    path('add-dental-record/', views.add_dental_record, name='add_dental_record'),
+    
+    path('exam/<int:patient_id>/', views.dental_exam_view, name='dental_exam'),
+    path('add-or-update-tooth/<int:patient_id>/', views.add_or_update_tooth_record, name='add_or_update_tooth_record'),
+    path('edit-tooth/<int:record_id>/', views.edit_tooth_record, name='edit_tooth_record'),
+    path('delete-tooth/<int:record_id>/', views.delete_tooth_record, name='delete_tooth_record'),
+
+
+
+
+  
+
+
+    
+
+
+
+
+
+
+
+ 
+
+
 ]

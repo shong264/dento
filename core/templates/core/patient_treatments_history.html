@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>سجل العلاجات</title>
+    <style>
+        body {
+            direction: rtl;
+            font-family: 'Segoe UI', sans-serif;
+            background: #f0f0f0;
+            padding: 30px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        table {
+            width: 100%;
+            background: white;
+            border-collapse: collapse;
+            margin-top: 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+            vertical-align: middle;
+        }
+
+        th {
+            background: #16a085;
+            color: white;
+        }
+
+        .images-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .images-row img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .no-images {
+            font-size: 13px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+<h2>سجل العلاجات للمريض: {{ patient.name }}</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>السن</th>
+            <th>نوع العلاج</th>
+            <th>التكلفة</th>
+            <th>التاريخ</th>
+            <th>ملاحظات</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for t in treatments %}
+            <tr>
+                <td>{{ t.tooth_number }}</td>
+                <td>{{ t.treatment_type.name }}</td>
+                <td>{{ t.cost }} ر.س</td>
+                <td>{{ t.date|date:"Y-m-d" }}</td>
+                <td>{{ t.notes|default:"—" }}</td>
+            </tr>
+            <tr>
+                <td colspan="5">
+                    {% if t.images.all %}
+                        <div class="images-row">
+                            {% for img in t.images.all %}
+                                <a href="{{ img.image.url }}" target="_blank">
+                                    <img src="{{ img.image.url }}" alt="صورة العلاج">
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="no-images">لا توجد صور.</div>
+                    {% endif %}
+                </td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="5">لا توجد علاجات مسجلة لهذا المريض.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>

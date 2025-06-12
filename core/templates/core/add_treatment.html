@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>إضافة علاج جديد</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <h1>🦷 إضافة علاج جديد</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">💾 حفظ</button>
+    </form>
+
+    <a href="{% url 'treatments_list' %}">عرض جميع العلاجات</a>
+</body>
+</html>
